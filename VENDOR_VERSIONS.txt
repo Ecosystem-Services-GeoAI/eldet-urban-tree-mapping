@@ -1,0 +1,8 @@
+# Vendored upstream revisions (update after each vendor bump)
+
+ultralytics ec8a844f5a7fea50e339fc7230b85cd963c3c668
+rf-detr     680b58607e20b3fd083fe4aa7c5cc63649afa21e
+
+# Record with:  (from repo root)
+#   git -C ultralytics rev-parse HEAD
+#   git -C rf-detr rev-parse HEAD

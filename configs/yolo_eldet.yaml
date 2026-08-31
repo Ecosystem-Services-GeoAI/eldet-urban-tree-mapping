@@ -1,0 +1,14 @@
+# YOLO + ELDET (YAML sketch)
+
+Ultralytics training is driven by Python ``overrides`` dicts passed to ``DetectionTrainer`` subclasses, not a
+single merged training YAML owned by this repo. Use this file as **documentation** and mirror fields into your
+launcher or Hydra config.
+
+- **Trainer:** ``eldet.yolo.ELDETDetectionTrainer`` — pass ``eldet=ELDETYoloConfig(...)`` in ``overrides`` (see
+  ``examples/train_yolo_eldet.py``).
+- **ELDET:** ``ELDETYoloConfig`` — ``lambda_kd``, ``teacher_decay``, ``use_metric_phase_detection``,
+  ``teacher_start_epoch``, ``series_csv_path`` (UTF-8 CA/GTBA + ``loss_kd`` rows), etc. (see ``eldet/yolo/config.py``).
+- **Metrics CSV / Ultralytics:** with ``series_csv_path`` set, epoch rows include epoch-mean raw ``loss_kd`` when the teacher runs; ``results.csv`` also gains an ``eldet_kd`` column on those epochs.
+- **Stock EMA:** replaced by a **student shim** inside ``ELDETDetectionTrainer._setup_train`` when ELDET is enabled;
+  distillation uses ``trainer.eldet_teacher`` only.
+- **Vendor loop:** ``eldet/yolo/vendor_train_loop.py`` must be re-synced when rebasing ``ultralytics/``.

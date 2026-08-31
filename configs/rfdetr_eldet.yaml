@@ -1,0 +1,13 @@
+# RF-DETR + ELDET (YAML sketch)
+
+RF-DETR training is driven by Pydantic ``TrainConfig`` / ``ModelConfig`` in Python, not a single merged YAML in
+upstream. Use this file as a **documentation stub** and copy fields into your script or Hydra config.
+
+Set ``TrainConfig.dataset_dir`` to a COCO-style dataset root (``train/``, ``valid/``, and annotations).
+
+- **Model:** ``RFDETRNanoConfig`` (or another variant) — set ``num_classes`` to match annotations.
+- **Train:** ``TrainConfig`` — set ``dataset_dir``, ``output_dir``, ``epochs``, ``use_ema=False`` when ELDET is on.
+- **ELDET:** ``ELDETRFDETRConfig(enabled=True, ...)`` — pass into ``ELDETRFDETRModelModule(..., eldet=...)``. Optional ``series_csv_path`` appends UTF-8 rows (CA/GTBA, transitions, epoch-mean ``loss_kd``); Lightning also logs ``train/eldet_kd``.
+- **Callbacks:** after ``build_trainer(...)``, call ``attach_eldet_callbacks_to_trainer(trainer, eldet_cfg, train_config)`` (pass ``train_config`` so stock ``use_ema`` conflicts raise).
+
+See ``examples/train_rfdetr_eldet.py`` and ``patches/rfdetr-criterion-eldet-indices.md``.

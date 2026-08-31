@@ -1,0 +1,54 @@
+[build-system]
+requires = ["setuptools>=61", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "eldet"
+version = "0.1.0"
+description = "ELDET: early-learning distillation for noisy detection labels (YOLO + RF-DETR)."
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+keywords = ["object-detection", "noisy-labels", "distillation", "ELDET"]
+classifiers = [
+    "Development Status :: 2 - Pre-Alpha",
+    "Intended Audience :: Science/Research",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+# Core: numpy/scipy for metrics + transition; torch for EMA + KD (no ultralytics/rfdetr imports).
+dependencies = [
+    "numpy>=1.23.0",
+    "scipy>=1.9.0",
+    "torch>=1.13.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.4",
+    "ruff>=0.4",
+    "pytorch-lightning>=2.0.0",
+]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["eldet"]
+
+[tool.pytest.ini_options]
+testpaths = ["eldet/tests"]
+# Put vendored ``ultralytics/`` *project root* before ``.`` so ``import ultralytics`` resolves to
+# ``ultralytics/ultralytics/__init__.py``. With only ``["."]``, Python 3 picks ``./ultralytics/`` as a
+# namespace-only directory and ``from ultralytics import __version__`` fails in ``cfg/__init__.py``.
+pythonpath = ["ultralytics", "."]
+
+[tool.ruff]
+line-length = 120
+target-version = "py310"
+src = ["eldet", "examples"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "W"]
